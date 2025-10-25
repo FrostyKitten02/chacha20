@@ -9,12 +9,14 @@ func main() {
 	key := internal.Key{1, 2, 3, 4, 5, 6, 7, 8}
 	nonce := internal.Nonce{1, 2, 3}
 
-	data := []byte{123, 10, 50, 12}
+	str := "aljsdladklakdakldasjdanidnasdalkjhdahdiapdjawpdmaiudnipmasdhashdpajsdnasčodhasdošpjasdouabdpiasjndšasodkjaiphdaspdasšpdokšasdmapsdniasnšoasmcšađadadaćsčda\nasdasd"
+	data := []byte(str)
+	fmt.Println("Original str: " + str)
 
 	e := internal.Encrypt(key, 0, nonce, data)
-	ed := internal.Encrypt(key, 0, nonce, e)
+	fmt.Println("Encrypted string: " + string(e))
 
-	fmt.Println(e)
-	fmt.Println(ed)
-
+	e2 := []byte(e)
+	ed := internal.Encrypt(key, 0, nonce, e2)
+	fmt.Println("Decrypted string: " + string(ed))
 }

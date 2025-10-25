@@ -27,17 +27,6 @@ func Encrypt(key Key, counter uint32, nonce Nonce, data []byte) []byte {
 		copy(encrypted[startIndex:finishIndex], encryptedBlock)
 	}
 
-	//could be combined into for loop
-	//if partialLast {
-	//	i := maxBlock
-	//	key_stream := blockFunc(key, counter+i, nonce)
-	//	startIndex := i * 64
-	//	finishIndex := len(data) - 1
-	//	block := data[startIndex:finishIndex]
-	//	encryptedBlock := xorArr(key_stream, block)
-	//	copy(encrypted[startIndex:finishIndex], encryptedBlock)
-	//}
-
 	return encrypted
 }
 
@@ -98,19 +87,19 @@ func xorArr(a [64]byte, b []byte) []byte {
 }
 
 func innerBlock(state *[16]uint32) {
-	QRound(state, 0, 4, 8, 12)
-	QRound(state, 1, 5, 9, 13)
-	QRound(state, 2, 6, 10, 14)
-	QRound(state, 3, 7, 11, 15)
+	qRound(state, 0, 4, 8, 12)
+	qRound(state, 1, 5, 9, 13)
+	qRound(state, 2, 6, 10, 14)
+	qRound(state, 3, 7, 11, 15)
 
-	QRound(state, 0, 5, 10, 15)
-	QRound(state, 1, 6, 11, 12)
-	QRound(state, 2, 7, 8, 13)
-	QRound(state, 3, 4, 9, 14)
+	qRound(state, 0, 5, 10, 15)
+	qRound(state, 1, 6, 11, 12)
+	qRound(state, 2, 7, 8, 13)
+	qRound(state, 3, 4, 9, 14)
 }
 
-func QRound(state *[16]uint32, a, b, c, d int) {
-	//no need for mod max_uint32val, overflow ok?
+func qRound(state *[16]uint32, a, b, c, d int) {
+	//no need for mod max_uint32val, overflow ok
 	state[a] += state[b]
 	state[d] ^= state[a]
 	state[d] = bits.RotateLeft32(state[d], 16)
