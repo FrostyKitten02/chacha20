@@ -15,10 +15,10 @@ func main() {
 	data := []byte(str)
 	fmt.Println("Original str: " + str)
 
-	e := internal.Encrypt(key, 0, nonce, data)
+	e := internal.EncryptParallel(key, 0, nonce, data)
 	fmt.Println("Encrypted string: " + string(e))
 
 	e2 := []byte(e)
-	ed := internal.Encrypt(key, 0, nonce, e2)
+	ed := internal.EncryptParallel(key, 0, nonce, e2)
 	fmt.Println("Decrypted string: " + string(ed))
 }

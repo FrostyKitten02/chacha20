@@ -37,7 +37,7 @@ func encryptBlock(key Key, counter uint32, nonce Nonce, data []byte, i uint32, d
 
 func blockFunc(key Key, counter uint32, nonce Nonce) [64]byte {
 	state := createState(key, counter, nonce)
-	workingState := *state
+	workingState := state
 	workingStatePtr := &workingState
 
 	for i := 0; i < 10; i++ {
@@ -53,8 +53,8 @@ func blockFunc(key Key, counter uint32, nonce Nonce) [64]byte {
 	return result
 }
 
-func createState(key Key, counter uint32, nonce Nonce) *[16]uint32 {
-	state := &[16]uint32{}
+func createState(key Key, counter uint32, nonce Nonce) [16]uint32 {
+	state := [16]uint32{}
 
 	//constants
 	state[0] = 0x61707865
@@ -80,15 +80,6 @@ func createState(key Key, counter uint32, nonce Nonce) *[16]uint32 {
 	state[14] = nonce[1]
 	state[15] = nonce[2]
 	return state
-}
-
-func xorArr(a [64]byte, b []byte) []byte {
-	result := make([]byte, len(b))
-	for i := 0; i < len(b); i++ {
-		result[i] = a[i] ^ b[i]
-	}
-
-	return result
 }
 
 func xorToArr(a [64]byte, b []byte, result []byte, offset int) {
