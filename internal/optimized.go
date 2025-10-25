@@ -31,6 +31,7 @@ func worker(key Key, counter uint32, nonce Nonce, data []byte, dataLen uint32, e
 	defer wg.Done()
 
 	for i := range jobs {
+		//same code as in single thread function but not calling that function because of 20% overhead for some reason!
 		key_stream := blockFunc(key, counter+i, nonce)
 		startIndex := i * 64
 		finishIndex := startIndex + 64
