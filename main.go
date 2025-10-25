@@ -3,9 +3,11 @@ package main
 import (
 	"ChaCha20/internal"
 	"fmt"
+	"runtime"
 )
 
 func main() {
+	runtime.GOMAXPROCS(6)
 	key := internal.Key{1, 2, 3, 4, 5, 6, 7, 8}
 	nonce := internal.Nonce{1, 2, 3}
 
