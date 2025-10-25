@@ -30,8 +30,9 @@ func encryptBlock(key Key, counter uint32, nonce Nonce, data []byte, i uint32, d
 	}
 
 	block := data[startIndex:finishIndex]
-	encryptedBlock := xorArr(key_stream, block)
-	copy(encrypted[startIndex:finishIndex], encryptedBlock)
+	//encryptedBlock := xorArr(key_stream, block)
+	xorToArr(key_stream, block, encrypted, int(startIndex))
+	//copy(encrypted[startIndex:finishIndex], encryptedBlock)
 }
 
 func blockFunc(key Key, counter uint32, nonce Nonce) [64]byte {
@@ -88,6 +89,12 @@ func xorArr(a [64]byte, b []byte) []byte {
 	}
 
 	return result
+}
+
+func xorToArr(a [64]byte, b []byte, result []byte, offset int) {
+	for i := 0; i < len(b); i++ {
+		result[i+offset] = a[i] ^ b[i]
+	}
 }
 
 func innerBlock(state *[16]uint32) {

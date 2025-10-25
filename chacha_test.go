@@ -20,7 +20,10 @@ func TestTime(t *testing.T) {
 	out := encrypt(key, 0, nonce, file, internal.EncryptParallel, "parallel")
 	os.WriteFile("test.mkv.enc", out, 0777)
 
-	encrypt(key, 0, nonce, file, internal.Encrypt, "sequential")
+	back := encrypt(key, 0, nonce, out, internal.EncryptParallel, "parallel-dec")
+	os.WriteFile("test2.mkv", back, 0777)
+
+	//encrypt(key, 0, nonce, file, internal.Encrypt, "sequential")
 
 }
 

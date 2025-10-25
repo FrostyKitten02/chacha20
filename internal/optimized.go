@@ -35,6 +35,7 @@ func encryptBlockParallel(key Key, counter uint32, nonce Nonce, data []byte, i u
 	}
 
 	block := data[startIndex:finishIndex]
+	xorToArr(key_stream, block, encrypted, int(startIndex))
 	encryptedBlock := xorArr(key_stream, block)
 	copy(encrypted[startIndex:finishIndex], encryptedBlock)
 }
