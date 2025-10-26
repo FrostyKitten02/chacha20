@@ -9,18 +9,7 @@ import (
 type Key [8]uint32
 type Nonce [3]uint32
 
-func Encrypt(key Key, counter uint32, nonce Nonce, data []byte) []byte {
-	dataLen := len(data)
-	maxBlock := dataLen / 64
-	encrypted := make([]byte, dataLen)
-	for i := 0; i <= maxBlock; i++ {
-		encryptBlock(key, counter, nonce, data, i, dataLen, encrypted)
-	}
-
-	return encrypted
-}
-
-func encryptBlock(key Key, counter uint32, nonce Nonce, data []byte, i int, dataLen int, encrypted []byte) {
+func EncryptBlock(key Key, counter uint32, nonce Nonce, data []byte, i int, dataLen int, encrypted []byte) {
 	key_stream := blockFunc(key, uint32(int(counter)+i), nonce)
 	startIndex := i * 64
 	finishIndex := startIndex + 64

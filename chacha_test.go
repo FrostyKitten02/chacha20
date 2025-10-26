@@ -1,6 +1,7 @@
 package main
 
 import (
+	"ChaCha20/chacha20"
 	"ChaCha20/internal"
 	"fmt"
 	"os"
@@ -17,7 +18,7 @@ func TestTime(t *testing.T) {
 	nonce := internal.Nonce{1, 2, 3}
 
 	file, _ := os.ReadFile("test.mkv")
-	encrypt(key, 0, nonce, file, internal.EncryptParallel, "parallel")
+	encrypt(key, 0, nonce, file, chacha20.EncryptParallel, "parallel")
 }
 
 func TestFileEncrypt(t *testing.T) {
@@ -34,7 +35,7 @@ func TestFileEncrypt(t *testing.T) {
 	megaSize := float64(stats.Size()) / 1_000_000
 	start := time.Now().UnixNano()
 
-	encErr := internal.EncryptFile(key, 0, nonce, "test.mkv", "test.mkv.enc")
+	encErr := chacha20.EncryptFile(key, 0, nonce, "test.mkv", "test.mkv.enc")
 
 	totalTime := float64(time.Now().UnixNano()-start) / 1_000_000_000
 	fmt.Println("Encrypted file in:  " + strconv.FormatFloat(totalTime, 'f', 3, 64) + "s")

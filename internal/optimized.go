@@ -4,30 +4,7 @@ import (
 	"sync"
 )
 
-func EncryptParallel(key Key, counter uint32, nonce Nonce, data []byte) []byte {
-	dataLen := len(data)
-	maxBlock := dataLen / 64
-	encrypted := make([]byte, dataLen)
-
-	numWorkers := 10
-	jobs := make(chan int, numWorkers*2)
-	var wg sync.WaitGroup
-
-	for w := 0; w < numWorkers; w++ {
-		wg.Add(1)
-		go worker(key, counter, nonce, data, dataLen, encrypted, jobs, &wg)
-	}
-
-	for i := 0; i <= maxBlock; i++ {
-		jobs <- i
-	}
-	close(jobs)
-
-	wg.Wait()
-	return encrypted
-}
-
-func worker(key Key, counter uint32, nonce Nonce, data []byte, dataLen int, encrypted []byte, jobs <-chan int, wg *sync.WaitGroup) {
+func Worker(key Key, counter uint32, nonce Nonce, data []byte, dataLen int, encrypted []byte, jobs <-chan int, wg *sync.WaitGroup) {
 	defer wg.Done()
 
 	for i := range jobs {
@@ -41,6 +18,6 @@ func worker(key Key, counter uint32, nonce Nonce, data []byte, dataLen int, encr
 		}
 
 		block := data[startIndex:finishIndex]
-		xorToArr(key_stream, block, encrypted, int(startIndex))
+		xorToArr(key_stream, block, encrypted, startIndex)
 	}
 }
