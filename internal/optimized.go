@@ -5,12 +5,12 @@ import (
 )
 
 func EncryptParallel(key Key, counter uint32, nonce Nonce, data []byte) []byte {
-	dataLen := uint32(len(data))
+	dataLen := len(data)
 	maxBlock := dataLen / 64
 	encrypted := make([]byte, dataLen)
 
 	numWorkers := 10
-	jobs := make(chan uint32, numWorkers*2)
+	jobs := make(chan int, numWorkers*2)
 	var wg sync.WaitGroup
 
 	for w := 0; w < numWorkers; w++ {
@@ -18,7 +18,7 @@ func EncryptParallel(key Key, counter uint32, nonce Nonce, data []byte) []byte {
 		go worker(key, counter, nonce, data, dataLen, encrypted, jobs, &wg)
 	}
 
-	for i := uint32(0); i <= maxBlock; i++ {
+	for i := 0; i <= maxBlock; i++ {
 		jobs <- i
 	}
 	close(jobs)
@@ -27,13 +27,13 @@ func EncryptParallel(key Key, counter uint32, nonce Nonce, data []byte) []byte {
 	return encrypted
 }
 
-func worker(key Key, counter uint32, nonce Nonce, data []byte, dataLen uint32, encrypted []byte, jobs <-chan uint32, wg *sync.WaitGroup) {
+func worker(key Key, counter uint32, nonce Nonce, data []byte, dataLen int, encrypted []byte, jobs <-chan int, wg *sync.WaitGroup) {
 	defer wg.Done()
 
 	for i := range jobs {
 		//same code as in single thread function but not calling that function because of 20% overhead for some reason!
-		key_stream := blockFunc(key, counter+i, nonce)
-		startIndex := i * 64
+		key_stream := blockFunc(key, uint32(int(counter)+i), nonce)
+		startIndex := int(i) * 64
 		finishIndex := startIndex + 64
 
 		if finishIndex > dataLen {

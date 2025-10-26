@@ -10,18 +10,18 @@ type Key [8]uint32
 type Nonce [3]uint32
 
 func Encrypt(key Key, counter uint32, nonce Nonce, data []byte) []byte {
-	dataLen := uint32(len(data))
+	dataLen := len(data)
 	maxBlock := dataLen / 64
 	encrypted := make([]byte, dataLen)
-	for i := uint32(0); i <= maxBlock; i++ {
+	for i := 0; i <= maxBlock; i++ {
 		encryptBlock(key, counter, nonce, data, i, dataLen, encrypted)
 	}
 
 	return encrypted
 }
 
-func encryptBlock(key Key, counter uint32, nonce Nonce, data []byte, i uint32, dataLen uint32, encrypted []byte) {
-	key_stream := blockFunc(key, counter+i, nonce)
+func encryptBlock(key Key, counter uint32, nonce Nonce, data []byte, i int, dataLen int, encrypted []byte) {
+	key_stream := blockFunc(key, uint32(int(counter)+i), nonce)
 	startIndex := i * 64
 	finishIndex := startIndex + 64
 
@@ -30,9 +30,7 @@ func encryptBlock(key Key, counter uint32, nonce Nonce, data []byte, i uint32, d
 	}
 
 	block := data[startIndex:finishIndex]
-	//encryptedBlock := xorArr(key_stream, block)
 	xorToArr(key_stream, block, encrypted, int(startIndex))
-	//copy(encrypted[startIndex:finishIndex], encryptedBlock)
 }
 
 func blockFunc(key Key, counter uint32, nonce Nonce) [64]byte {
